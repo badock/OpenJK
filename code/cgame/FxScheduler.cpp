@@ -1472,6 +1472,13 @@ void CFxScheduler::CreateEffect( CPrimitiveTemplate *fx, const vec3_t origin, ve
 	trace_t	tr;
 	int		emitterModel;
 
+	// The following code prevents multiple rendering of blaster shots.
+	double fx_duration = fx->mLife.GetVal();
+	double fps_estimate = 1000.0 / cg.frametime;
+	if (fps_estimate > 60) {
+		fx_duration = fx_duration * 60.0 / fps_estimate;
+	}
+
 	// We may modify the axis, so make a work copy
 	AxisCopy( axis, ax );
 
@@ -1702,7 +1709,7 @@ void CFxScheduler::CreateEffect( CPrimitiveTemplate *fx, const vec3_t origin, ve
 						fx->mRotation.GetVal(), fx->mRotationDelta.GetVal(),
 						fx->mMin, fx->mMax, fx->mElasticity.GetVal(),
 						fx->mDeathFxHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(),
-						fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, modelNum, boltNum );
+						fx_duration, fx->mMediaHandles.GetHandle(), flags, modelNum, boltNum );
 		break;
 
 	//---------
@@ -1713,7 +1720,7 @@ void CFxScheduler::CreateEffect( CPrimitiveTemplate *fx, const vec3_t origin, ve
 						fx->mSizeStart.GetVal(), fx->mSizeEnd.GetVal(), fx->mSizeParm.GetVal(),
 						fx->mAlphaStart.GetVal(), fx->mAlphaEnd.GetVal(), fx->mAlphaParm.GetVal(),
 						sRGB, eRGB, fx->mRGBParm.GetVal(),
-						fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(), flags, modelNum, boltNum );
+						fx_duration, fx->mMediaHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(), flags, modelNum, boltNum );
 		break;
 
 	//---------
@@ -1727,7 +1734,7 @@ void CFxScheduler::CreateEffect( CPrimitiveTemplate *fx, const vec3_t origin, ve
 						sRGB, eRGB, fx->mRGBParm.GetVal(),
 						fx->mMin, fx->mMax, fx->mElasticity.GetVal(),
 						fx->mDeathFxHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(),
-						fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, modelNum, boltNum );
+						fx_duration, fx->mMediaHandles.GetHandle(), flags, modelNum, boltNum );
 		break;
 
 	//----------------
